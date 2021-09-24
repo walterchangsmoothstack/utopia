@@ -14,138 +14,52 @@ import com.ss.utopia.entity.Route;
 import com.ss.utopia.service.AdminServices.Service;
 
 /**
- * @author Walter Chang
- *
+ * @author Walter Chang Class Function: handles administration commands that
+ *         have to do with airport data manipulation Calls the AdminService
+ *         which organizes the commands by Create, Read, Update, and Delete
  */
-public class AdminAirport{
-	
+public class AdminAirport {
+
+	/* Have a connUtil to pass to AdminServices for getting a connection */
 	ConnectionUtil connUtil = new ConnectionUtil();
 
-	public String addAirport(Airport airport){
+	/* Adds an airport, must have airportId and city */
+	public String addAirport(Airport airport) {
+		/*
+		 * If airport's values are null, it will break the query. AirportCode must
+		 * consist of 3 uppercase characters. The city should not be an empty string.
+		 */
+		if (airport == null || airport.getAirportId() == null || "".equals(airport.getCity())
+				|| airport.getAirportId().length() != 3
+				|| !airport.getAirportId().equals(airport.getAirportId().toUpperCase())) {
+			return "Failed to add AIRPORT";
+		}
 		AdminServices admin = new AdminServices();
 		return admin.add(airport, Service.AIRPORT, connUtil);
 	}
-	
+	/* Read all airports */
 	public String readAirports() {
-		
+
 		AdminServices admin = new AdminServices();
-		return admin.read(Service.AIRPORT, connUtil);
+		return admin.read(null, Service.AIRPORT, connUtil);
 	}
-	
+
+	/* Read all airports that are in a certain city */
+	public String readAirportsInCity(String city) {
+		AdminServices admin = new AdminServices();
+		return admin.read(city, Service.AIRPORT, connUtil);
+	}
+
+	/* Update a certain airport using its airport code (changes city)*/
 	public String updateAirport(Airport airport) {
 		AdminServices admin = new AdminServices();
 		return admin.update(airport, Service.AIRPORT, connUtil);
 	}
-	
+
+	/* Delete a certain airport using its airport code */
 	public String deleteAirport(String airportId) {
 		AdminServices admin = new AdminServices();
-		return admin.delete(airportId, Service.AIRPORT, connUtil);
-		
-	}
-	
-	public String addRoute(Route route) {
-		AdminServices admin = new AdminServices();
-		return admin.add(route, Service.ROUTE, connUtil);
-	}
-	
-//	public String addFlight(Airport airport, Route route) {
-//		Connection conn = null;
-//		try {
-//			conn = connection.getConnection();
-//			RouteDAO rdao = new RouteDAO(conn);
-//			AirportDAO adao = new AirportDAO(conn);
-//
-//			conn.commit();
-//			return "Flight added successfully";
-//		} catch (Exception e) {
-//			if (conn != null) {
-//				try {
-//					conn.rollback();
-//				} catch (Exception e_2) {
-//
-//				}
-//
-//			}
-//			return "Flight addition failed";
-//		} finally {
-//			if (conn != null) {
-//				try {
-//					conn.rollback();
-//				} catch (Exception e) {
-//
-//				}
-//			}
-//		}
-//
-//	}
-//
-//	public String addAirport(Airport airport) {
-//		Connection conn = null;
-//
-//		try {
-//			conn = connection.getConnection();
-//			AirportDAO adao = new AirportDAO(conn);
-//			adao.addAirport(airport);
-//			conn.commit();
-//			return "New airport " + airport.getAirportId() + "added at " + airport.getCity();
-//		} catch (ClassNotFoundException | SQLException e) {
-//
-//			if (conn != null) {
-//				try {
-//					conn.rollback();
-//				} catch (Exception e_2) {
-//
-//				}
-//			}
-//			e.printStackTrace();
-//			return "Airport addition failed";
-//		} finally {
-//			if (conn != null) {
-//				try {
-//					conn.close();
-//				} catch (Exception e) {
-//
-//				}
-//			}
-//
-//		}
-//
-//	}
-//	
-	public void readAirportExample() {
-		Connection conn = null;
-		List<Airport> airports;
-		try {
-			conn = connUtil.getConnection();
-			AirportDAO adao = new AirportDAO(conn);
-			airports = adao.readAirports();
-			
-			for(Airport a : airports) {
-				System.out.println("Name: " + a.getAirportId());
-				System.out.println("City: " + a.getCity());
-				System.out.println("------------------");
-			}
-			conn.commit();
-		} catch (ClassNotFoundException | SQLException e) {
-
-			if (conn != null) {
-				try {
-					conn.rollback();
-				} catch (Exception e_2) {
-
-				}
-			}
-			e.printStackTrace();
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (Exception e) {
-
-				}
-			}
-
-		}
+		return admin.delete(new Object[] { airportId }, Service.AIRPORT, connUtil);
 
 	}
 

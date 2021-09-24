@@ -44,6 +44,9 @@ public class AirportDAO extends BaseDAO<Airport>{
 	public List<Airport> readAirports() throws ClassNotFoundException, SQLException {
 		return read("SELECT * FROM airport", null);
 	}
+	public List<Airport> readAirportsInCity(String city) throws ClassNotFoundException, SQLException {
+		return read("SELECT * FROM airport WHERE city = ?", new Object[] {city});
+	}
 	
 	protected List<Airport> extractData(ResultSet rs) throws ClassNotFoundException, SQLException {
 		List<Airport> airportList = new ArrayList<>();

@@ -30,19 +30,20 @@ public abstract class BaseDAO<T> {
 	
 	protected Integer savePK(String statement, Object[] params) throws SQLException, ClassNotFoundException {
 		PreparedStatement pstmt = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS);
-		int c = 1;
 		if (params != null) {
+			int c = 1;
 			for (Object o : params) {
 				pstmt.setObject(c++, o);
 			}
 		}
 		pstmt.execute();
-		ResultSet rs = pstmt.getGeneratedKeys();
-		System.out.println("hello");
 
+		ResultSet rs = pstmt.getGeneratedKeys();
 		while(rs.next()) {
-			return rs.getInt(0); //check if this is 0 or 1;
+			return rs.getInt(1); //check if this is 0 or 1;
+
 		}
+
 		return null;
 	}
 	protected List<T> read(String statement, Object[] params) throws SQLException, ClassNotFoundException{

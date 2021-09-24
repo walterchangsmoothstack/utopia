@@ -8,20 +8,29 @@ package com.ss.utopia.entity;
  *
  */
 public class Route {
-	private Airport originAirport;
-	private Airport destinationAirport;
+	private String originAirport;
+	private String destinationAirport;
 	private Integer routeId;
 	
-	public Airport getOriginAirport() {
+	public Route (Integer routeId, String originAirport, String destinationAirport){
+		this.routeId = routeId;
+		this.originAirport = originAirport;
+		this.destinationAirport = destinationAirport;
+	}
+	public Route() {
+		
+	}
+	
+	public String getOriginAirport() {
 		return originAirport;
 	}
-	public void setOriginAirport(Airport originAirport) {
+	public void setOriginAirport(String originAirport) {
 		this.originAirport = originAirport;
 	}
-	public Airport getDestinationAirport() {
+	public String getDestinationAirport() {
 		return destinationAirport;
 	}
-	public void setDestinationAirport(Airport destinationAirport) {
+	public void setDestinationAirport(String destinationAirport) {
 		this.destinationAirport = destinationAirport;
 	}
 	public Integer getRouteId() {
@@ -30,5 +39,7 @@ public class Route {
 	public void setRouteId(Integer routeId) {
 		this.routeId = routeId;
 	}
+	
+	
 
 }

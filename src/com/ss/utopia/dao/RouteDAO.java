@@ -25,32 +25,39 @@ public class RouteDAO extends BaseDAO<Route> {
 		super(conn);
 	}
 	
-	public void addRoute(Route route) throws SQLException, ClassNotFoundException {
-
-		Integer pk = savePK("INSERT INTO route VALUES (?, ?)",
-				new Object[] {route.getOriginAirport().getAirportId(), route.getDestinationAirport().getAirportId()});
-		System.out.println(pk);
+	public Integer addRoute(Route route) throws SQLException, ClassNotFoundException {
+		return savePK("INSERT INTO route (origin_id, destination_id) VALUES (?, ?)",
+				new Object[] {route.getOriginAirport(), route.getDestinationAirport()});
 	}
-	public void deleteRoute(String route_id) throws ClassNotFoundException, SQLException {
+	public void deleteRoute(Integer route_id) throws ClassNotFoundException, SQLException {
 		save("DELETE FROM route WHERE id = ?",
 				new Object[] {route_id});
 	}
-	public void updateRoute(Route route) throws ClassNotFoundException, SQLException {
-		save("UPDATE route SET origin_id = ? AND destination_id = ? WHERE origin_id = ?",
-				new Object[] {route.getOriginAirport(), route.getDestinationAirport(), route.getRouteId()});
+	public void deleteRouteFK(String originAirport, String destinationAirport) throws ClassNotFoundException, SQLException {
+		save("DELETE FROM route WHERE origin_id = ? AND destination_id = ?",
+				new Object[] {originAirport, destinationAirport});
 	}
+	public void updateRoute(Route route) throws ClassNotFoundException, SQLException {
+
+			save("UPDATE route SET origin_id = ? , destination_id = ? WHERE id = ?",
+					new Object[] {route.getOriginAirport(), route.getDestinationAirport(), route.getRouteId()});
+
+	}
+	public List<Route> readRoutesByAirportId(String airportId) throws ClassNotFoundException, SQLException {
+		return read("SELECT * FROM route WHERE origin_id = ? OR destination_id = ?", 
+						new Object[] { airportId, airportId });
+	}
+	
 	public List<Route> readRoutes() throws ClassNotFoundException, SQLException{
-		return read("SELECT * FROM routes", null);
+		return read("SELECT * FROM route", null);
 	}
 	
 	@Override
 	protected List<Route> extractData(ResultSet rs) throws SQLException, ClassNotFoundException {
 		List<Route> routes = new ArrayList<>();
 		while (rs.next()) {
-			Route route = new Route();
-			route.setRouteId(rs.getInt("id"));
-			route.getOriginAirport().setAirportId(rs.getString("origin_id"));
-			route.getDestinationAirport().setAirportId(rs.getString("destination_id"));
+			Route route = new Route(rs.getInt("id"), rs.getString("origin_id"), rs.getString("destination_id"));
+
 			routes.add(route);
 		}
 		return routes;
