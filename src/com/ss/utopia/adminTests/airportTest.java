@@ -68,11 +68,17 @@ public class airportTest {
 	}
 	@Test
 	public void testReadAirportsInCityFalse() {
-		System.out.println(admin.readAirportsInCity("San Diego"));
+		System.out.println(admin.readAirportsInCity(null));
 		assertNotEquals("Unable to read AIRPORT", admin.readAirportsInCity("San Diego"));
 	}
 	@Test
 	public void testReadAirportsInCityTrue() {
 		assertEquals("No AIRPORT found", admin.readAirportsInCity("Saskatchewan"));
+	}
+	@Test
+	public void testUpdateAirport() {
+		airport.setAirportId(null);
+		airport.setCity("Los Angeles");
+		System.out.println(admin.updateAirport(airport));
 	}
 }

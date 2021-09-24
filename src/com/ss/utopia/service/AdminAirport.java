@@ -46,12 +46,18 @@ public class AdminAirport {
 
 	/* Read all airports that are in a certain city */
 	public String readAirportsInCity(String city) {
+		if(city == null) {
+			return "Failed to read AIRPORT";
+		}
 		AdminServices admin = new AdminServices();
 		return admin.read(city, Service.AIRPORT, connUtil);
 	}
 
 	/* Update a certain airport using its airport code (changes city)*/
 	public String updateAirport(Airport airport) {
+		if(airport == null || airport.getAirportId() == null) {
+			return "Failed to update AIRPORT";
+		}
 		AdminServices admin = new AdminServices();
 		return admin.update(airport, Service.AIRPORT, connUtil);
 	}
