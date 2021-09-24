@@ -36,12 +36,12 @@ public class AirportDAO extends BaseDAO<Airport>{
 				new Object[] {airport.getCity(), airport.getAirportId()});
 	}
 	
-	public void deleteAirport(Airport airport) throws SQLException, ClassNotFoundException {
+	public void deleteAirport(String airportId) throws SQLException, ClassNotFoundException {
 		save("DELETE FROM airport WHERE iata_id = ?",
-				new Object[] {airport.getAirportId()});
+				new Object[] {airportId});
 	}
 	
-	public List<Airport> readAirport(Airport airport) throws ClassNotFoundException, SQLException {
+	public List<Airport> readAirports() throws ClassNotFoundException, SQLException {
 		return read("SELECT * FROM airport", null);
 	}
 	

@@ -14,6 +14,7 @@ public class Airport {
 	private String city;
 	private String airportId;
 	private List<Route> routes;
+	
 	public String getCity() {
 		return city;
 	}

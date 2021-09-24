@@ -38,6 +38,8 @@ public abstract class BaseDAO<T> {
 		}
 		pstmt.execute();
 		ResultSet rs = pstmt.getGeneratedKeys();
+		System.out.println("hello");
+
 		while(rs.next()) {
 			return rs.getInt(0); //check if this is 0 or 1;
 		}
