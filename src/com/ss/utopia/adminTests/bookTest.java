@@ -13,36 +13,48 @@ public class bookTest {
 	@Test
 	public void testAddBookFalse() {
 		book.setConfirmationCode("4735");
-		System.out.println(admin.addBooking(book));
-		//assertEquals("Unable to add BOOKING", admin.addBooking(book) );
+		assertEquals("Added BOOKING successfully", admin.addBooking(book));
 	}
 	
 	@Test
 	public void testReadBook() {
-		//System.out.println(admin.readBooking());
+		System.out.println(admin.readBooking());
 	}
 	@Test
 	public void testReadBookActive() {
-		//System.out.println(admin.readBookingActive(true));
+		System.out.println(admin.readBookingActive(true));
 	}
 	@Test
 	public void testReadBookCancelled() {
-		//System.out.println(admin.readBookingActive(false));
+		System.out.println(admin.readBookingActive(false));
 
 	}
 	@Test
-	public void testUpdateBook() {
-		//book.setId(5);
-		book.setId(12);
+	public void testUpdateBookTrue() {
+		book.setId(1);
 		book.setIsActive(false);
-		System.out.println(admin.updateBooking(book));
+		assertEquals("Updated BOOKING successfully", admin.updateBooking(book));
+	}
+//	@Test  TODO check if id exists for book in tbl_booking
+//	public void testUpdateBookFalse() {
+//		book.setId(999);
+//		assertEquals("Failed to update BOOKING", admin.updateBooking(book));
+//	}
+	@Test
+	public void testUpdateNull() {
+		assertEquals("Failed to update BOOKING", admin.updateBooking(null));
+		book.setConfirmationCode(null);
+		assertEquals("Failed to update BOOKING", admin.updateBooking(book));
+	}
+	@Test
+	public void testUpdateNullId() {
+		book.setId(null);
+		assertEquals("Failed to update BOOKING", admin.updateBooking(book));
 	}
 	@Test 
 	public void testDeleteBook() {
-		for(int i =33; i<=34; i++) {
-			book.setId(i);
-		System.out.println(admin.deleteBooking(book));
-		}
+		book.setId(35);
+		assertEquals("Deleted BOOKING successfully", admin.deleteBooking(book)); //only test once
 	}
 	
 }

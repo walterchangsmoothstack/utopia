@@ -26,7 +26,7 @@ public class flightTest {
 	}
 	@Test
 	public void testAddFlightFalse() {
-		//assertNotEquals("Added FLIGHT successfully", admin.addFlight(flight));
+		assertNotEquals("Added FLIGHT successfully", admin.addFlight(flight)); //only test once
 	}
 	@Test
 	public void testReadFlight() {

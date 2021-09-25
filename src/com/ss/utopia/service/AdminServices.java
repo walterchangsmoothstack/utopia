@@ -7,17 +7,21 @@ import java.util.List;
 
 import com.ss.utopia.dao.AirportDAO;
 import com.ss.utopia.dao.BookDAO;
+import com.ss.utopia.dao.BookingAgentDAO;
 import com.ss.utopia.dao.FlightDAO;
+import com.ss.utopia.dao.PassengerDAO;
 import com.ss.utopia.dao.RouteDAO;
 import com.ss.utopia.entity.Airport;
 import com.ss.utopia.entity.Book;
+import com.ss.utopia.entity.BookingAgent;
 import com.ss.utopia.entity.Flight;
+import com.ss.utopia.entity.Passenger;
 import com.ss.utopia.entity.Route;
 
 public class AdminServices<T> {
 
 	public enum Service {
-		AIRPORT, ROUTE, FLIGHT, BOOKING
+		AIRPORT, ROUTE, FLIGHT, BOOKING, PASSENGER, EMPLOYEE
 	}
 
 	public String add(T obj, Service serv, ConnectionUtil connUtil) {
@@ -32,6 +36,7 @@ public class AdminServices<T> {
 			case ROUTE:
 				RouteDAO rdao = new RouteDAO(conn);
 				Integer pk = rdao.addRoute((Route) obj);
+				break;
 			case FLIGHT:
 				FlightDAO fdao = new FlightDAO(conn);
 				fdao.addFlight((Flight) obj);
@@ -39,13 +44,23 @@ public class AdminServices<T> {
 			case BOOKING:
 				BookDAO bdao = new BookDAO(conn);
 				bdao.addBook((Book) obj);
+				break;
+			case PASSENGER:
+				PassengerDAO pdao = new PassengerDAO(conn);
+				pdao.addPassenger((Passenger) obj);
+				break;
+			case EMPLOYEE:
+				BookingAgentDAO bgdao = new BookingAgentDAO(conn);
+				bgdao.addBookingAgent((BookingAgent) obj);
+				break;
+
 			default:
 				break;
 			}
 			conn.commit();
 			return "Added " + serv + " successfully";
 		} catch (ClassNotFoundException | SQLException | NullPointerException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			if (conn != null) {
 				try {
 					conn.rollback();
@@ -93,13 +108,14 @@ public class AdminServices<T> {
 								+ " Destination: " + r.getDestinationAirport() + "\n -----------------\n");
 
 					}
-					break;
+				} else {
+					for (Route r : rdao.readRoutes()) {
+						information.append("Id: " + r.getRouteId() + " Origin: " + r.getOriginAirport()
+								+ " Destination: " + r.getDestinationAirport() + "\n -----------------\n");
+					}
 				}
-				for (Route r : rdao.readRoutes()) {
-					information.append("Id: " + r.getRouteId() + " Origin: " + r.getOriginAirport() + " Destination: "
-							+ r.getDestinationAirport() + "\n -----------------\n");
+				break;
 
-				}
 			case FLIGHT:
 				FlightDAO fdao = new FlightDAO(conn);
 				if (optional != null) {
@@ -123,15 +139,47 @@ public class AdminServices<T> {
 				BookDAO bdao = new BookDAO(conn);
 				if (optional != null) {
 					for (Book b : bdao.readActiveBookings((Boolean) optional)) {
-						information.append("Booking Id: " + b.getId() + " Status: " +
-					(b.getIsActive() ? "Active." : "Cancelled." )+ " Confirmation Code: "+ b.getConfirmationCode()
-												+ "\n -----------------\n");
+						information.append(
+								"Booking Id: " + b.getId() + " Status: " + (b.getIsActive() ? "Active." : "Cancelled.")
+										+ " Confirmation Code: " + b.getConfirmationCode() + "\n -----------------\n");
 					}
 				} else {
 					for (Book b : bdao.readBookings()) {
-						information.append("Booking Id: " + b.getId() + " Status: " +
-					(b.getIsActive() ? "Active." : "Cancelled." )+ " Confirmation Code: "+ b.getConfirmationCode()
-												+ "\n -----------------\n");
+						information.append(
+								"Booking Id: " + b.getId() + " Status: " + (b.getIsActive() ? "Active." : "Cancelled.")
+										+ " Confirmation Code: " + b.getConfirmationCode() + "\n -----------------\n");
+					}
+				}
+				break;
+			case PASSENGER:
+				PassengerDAO pdao = new PassengerDAO(conn);
+				if (optional != null) {
+					for (Passenger p : pdao.readPassengerName((Passenger) optional)) {
+						information
+								.append("Id: " + p.getId() + " Booking Id: " + p.getBookId().getId() + "\n First Name: "
+										+ p.getGivenName() + " Last Name: " + p.getFamilyName() + " Gender: "
+										+ p.getGender() + " Addres: " + p.getAddress() + "\n -----------------\n");
+					}
+				} else {
+					for (Passenger p : pdao.readPassengers()) {
+						information
+								.append("Id: " + p.getId() + " Booking Id: " + p.getBookId().getId() + "\n First Name: "
+										+ p.getGivenName() + " Last Name: " + p.getFamilyName() + " Gender: "
+										+ p.getGender() + " Addres: " + p.getAddress() + "\n -----------------\n");
+					}
+				}
+				break;
+			case EMPLOYEE:
+				BookingAgentDAO bgdao = new BookingAgentDAO(conn);
+				if (optional != null) {
+					for (BookingAgent ba : bgdao.readBookingByAgent((BookingAgent) optional)) {
+						information.append("Booking Id: " + ba.getBook().getId() + " Agent Id: " + ba.getId()
+								+ "\n -----------------\n");
+					}
+				} else {
+					for (BookingAgent ba : bgdao.readBookings()) {
+						information.append("Booking Id: " + ba.getBook().getId() + " Agent Id: " + ba.getId()
+								+ "\n -----------------\n");
 					}
 				}
 				break;
@@ -141,7 +189,7 @@ public class AdminServices<T> {
 			conn.commit();
 			return (information.length() == 0) ? "No " + serv + " found" : information.toString();
 		} catch (ClassNotFoundException | SQLException | NullPointerException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			if (conn != null) {
 				try {
 					conn.rollback();
@@ -181,13 +229,22 @@ public class AdminServices<T> {
 			case BOOKING:
 				BookDAO bdao = new BookDAO(conn);
 				bdao.updateBook((Book) obj);
+				break;
+			case PASSENGER:
+				PassengerDAO pdao = new PassengerDAO(conn);
+				pdao.updatePassenger((Passenger) obj);
+				break;
+			case EMPLOYEE:
+				BookingAgentDAO bgdao = new BookingAgentDAO(conn);
+				bgdao.updateBookingAgent((BookingAgent) obj);
+				break;
 			default:
 				break;
 			}
 			conn.commit();
 			return "Updated " + serv + " successfully";
 		} catch (ClassNotFoundException | SQLException | NullPointerException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			if (conn != null) {
 				try {
 					conn.rollback();
@@ -231,14 +288,25 @@ public class AdminServices<T> {
 				break;
 			case BOOKING:
 				BookDAO bdao = new BookDAO(conn);
-				Book book = (Book)objects[0];
+				Book book = (Book) objects[0];
 				bdao.deleteBook(book.getId());
+				break;
+			case PASSENGER:
+				PassengerDAO pdao = new PassengerDAO(conn);
+				Passenger passenger = (Passenger) objects[0];
+				pdao.deletePassenger(passenger);
+				break;
+			case EMPLOYEE:
+				BookingAgentDAO bgdao = new BookingAgentDAO(conn);
+				bgdao.deleteBookingAgent((Book) objects[0]);
+				break;
 			default:
 				break;
 			}
 			conn.commit();
 			return "Deleted " + serv + " successfully";
-		} catch (ClassNotFoundException | SQLException | NullPointerException e) {
+		} catch (ClassNotFoundException | SQLException | ClassCastException | NullPointerException e) {
+			e.printStackTrace();
 			if (conn != null) {
 				try {
 					conn.rollback();
