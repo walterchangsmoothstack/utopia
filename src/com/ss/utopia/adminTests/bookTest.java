@@ -36,10 +36,10 @@ public class bookTest {
 		assertEquals("Updated BOOKING successfully", admin.updateBooking(book));
 	}
 //	@Test  TODO check if id exists for book in tbl_booking
-//	public void testUpdateBookFalse() {
-//		book.setId(999);
-//		assertEquals("Failed to update BOOKING", admin.updateBooking(book));
-//	}
+	public void testUpdateBookFalse() {
+		book.setId(999);
+		assertEquals("Failed to update BOOKING", admin.updateBooking(book));
+	}
 	@Test
 	public void testUpdateNull() {
 		assertEquals("Failed to update BOOKING", admin.updateBooking(null));
@@ -53,7 +53,7 @@ public class bookTest {
 	}
 	@Test 
 	public void testDeleteBook() {
-		book.setId(35);
+		book.setId(14);
 		assertEquals("Deleted BOOKING successfully", admin.deleteBooking(book)); //only test once
 	}
 	

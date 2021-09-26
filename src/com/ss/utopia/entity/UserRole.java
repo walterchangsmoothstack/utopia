@@ -8,23 +8,20 @@ package com.ss.utopia.entity;
  *
  */
 public class UserRole {
-	private String id;
+	private Integer id;
 	private String name;
 	
-	public UserRole(String id, String name) {
+	public UserRole(Integer id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 	}
 	
-	public UserRole() {
-		
-	}
-
-	public String getId() {
+	
+	public Integer getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -33,5 +30,6 @@ public class UserRole {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 
 }

@@ -48,7 +48,7 @@ public class UserDAO extends BaseDAO<User> {
 	}
 
 	public List<User> readUserByRole(UserRole role) throws ClassNotFoundException, SQLException {
-		return read("SELECT * FROM user WHERE role_id?",
+		return read("SELECT * FROM user WHERE role_id=?",
 				new Object[] { role.getId() });
 	}
 //	public List<Passenger> readPassengerBooking(Passenger passenger) throws ClassNotFoundException, SQLException {
@@ -59,7 +59,7 @@ public class UserDAO extends BaseDAO<User> {
 	protected List<User> extractData(ResultSet rs) throws ClassNotFoundException, SQLException {
 		List<User> userList = new ArrayList<>();
 		while (rs.next()) {
-			User user = new User(rs.getInt("id"), new UserRole(rs.getString("role_id"), null),
+			User user = new User(rs.getInt("id"), new UserRole(rs.getInt("role_id"), null),
 					rs.getString("given_name"), rs.getString("family_name"), rs.getString("username"), rs.getString("email"),
 					rs.getString("password"), rs.getString("phone"));
 			userList.add(user);

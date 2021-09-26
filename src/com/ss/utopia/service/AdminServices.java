@@ -11,17 +11,20 @@ import com.ss.utopia.dao.BookingAgentDAO;
 import com.ss.utopia.dao.FlightDAO;
 import com.ss.utopia.dao.PassengerDAO;
 import com.ss.utopia.dao.RouteDAO;
+import com.ss.utopia.dao.UserDAO;
 import com.ss.utopia.entity.Airport;
 import com.ss.utopia.entity.Book;
 import com.ss.utopia.entity.BookingAgent;
 import com.ss.utopia.entity.Flight;
 import com.ss.utopia.entity.Passenger;
 import com.ss.utopia.entity.Route;
+import com.ss.utopia.entity.User;
+import com.ss.utopia.entity.UserRole;
 
 public class AdminServices<T> {
 
 	public enum Service {
-		AIRPORT, ROUTE, FLIGHT, BOOKING, PASSENGER, EMPLOYEE
+		AIRPORT, ROUTE, FLIGHT, BOOKING, PASSENGER, EMPLOYEE, USER
 	}
 
 	public String add(T obj, Service serv, ConnectionUtil connUtil) {
@@ -52,6 +55,10 @@ public class AdminServices<T> {
 			case EMPLOYEE:
 				BookingAgentDAO bgdao = new BookingAgentDAO(conn);
 				bgdao.addBookingAgent((BookingAgent) obj);
+				break;
+			case USER:
+				UserDAO udao = new UserDAO(conn);
+				udao.addUser((User) obj);
 				break;
 
 			default:
@@ -183,13 +190,39 @@ public class AdminServices<T> {
 					}
 				}
 				break;
+			case USER:
+				UserDAO udao = new UserDAO(conn);
+				if (optional != null) {
+					for (User u : udao.readUserByRole((UserRole)optional)) {
+						information.append("Id: " + u.getId());
+						information.append("\nRole Id: " + u.getRole().getId());
+						information.append("\nFirst Name:" + u.getGivenName());
+						information.append("\nLast Name:" + u.getFamilyName());
+						information.append("\nUsername:" + u.getUsername());
+						information.append("\nemail:" + u.getEmail());
+						information.append("\nPhone Number:" + u.getPhone());
+						information.append("\n -----------------\n");
+					}
+				} else {
+					for (User u : udao.readUsers()) {
+						information.append("Id: " + u.getId());
+						information.append("\nRole Id: " + u.getRole().getId());
+						information.append("\nFirst Name:" + u.getGivenName());
+						information.append("\nLast Name:" + u.getFamilyName());
+						information.append("\nUsername:" + u.getUsername());
+						information.append("\nemail:" + u.getEmail());
+						information.append("\nPhone Number:" + u.getPhone());
+						information.append("\n -----------------\n");
+					}
+				}
+				break;
 			default:
 				break;
 			}
 			conn.commit();
 			return (information.length() == 0) ? "No " + serv + " found" : information.toString();
 		} catch (ClassNotFoundException | SQLException | NullPointerException e) {
-			// e.printStackTrace();
+			 e.printStackTrace();
 			if (conn != null) {
 				try {
 					conn.rollback();
@@ -238,13 +271,17 @@ public class AdminServices<T> {
 				BookingAgentDAO bgdao = new BookingAgentDAO(conn);
 				bgdao.updateBookingAgent((BookingAgent) obj);
 				break;
+			case USER:
+				UserDAO udao = new UserDAO(conn);
+				udao.updateUser((User) obj);
+				break;
 			default:
 				break;
 			}
 			conn.commit();
 			return "Updated " + serv + " successfully";
 		} catch (ClassNotFoundException | SQLException | NullPointerException e) {
-			// e.printStackTrace();
+			e.printStackTrace();
 			if (conn != null) {
 				try {
 					conn.rollback();
@@ -293,13 +330,19 @@ public class AdminServices<T> {
 				break;
 			case PASSENGER:
 				PassengerDAO pdao = new PassengerDAO(conn);
-				Passenger passenger = (Passenger) objects[0];
-				pdao.deletePassenger(passenger);
+				if (objects[0] instanceof Passenger) {
+					pdao.deletePassengerId((Passenger) objects[0]);
+				} else {
+					pdao.deletePassengerBookingId((Book) objects[0]);
+				}
 				break;
 			case EMPLOYEE:
 				BookingAgentDAO bgdao = new BookingAgentDAO(conn);
 				bgdao.deleteBookingAgent((Book) objects[0]);
 				break;
+			case USER:
+				UserDAO udao = new UserDAO(conn);
+				udao.deleteUser((User) objects[0]);
 			default:
 				break;
 			}

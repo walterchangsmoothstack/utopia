@@ -3,6 +3,7 @@
  */
 package com.ss.utopia.service;
 
+import com.ss.utopia.entity.Book;
 import com.ss.utopia.entity.Passenger;
 import com.ss.utopia.service.AdminServices.Service;
 
@@ -39,9 +40,14 @@ public class AdminPassenger {
 		return admin.update(passenger, Service.PASSENGER, conn);
 	}
 	/* Deletes passenger based off passenger id*/
-	public String deletePassenger(Passenger passenger) {
+	public String deletePassengerId(Passenger passenger) {
 		AdminServices admin = new AdminServices();
 		return admin.delete(new Object[] { passenger }, Service.PASSENGER, conn);
+	}
+	/* Deletes passenger based off booking id*/
+	public String deletePassengerBookingId(Book book) {
+		AdminServices admin = new AdminServices();
+		return admin.delete(new Object[] { book }, Service.PASSENGER, conn);
 	}
 
 }
