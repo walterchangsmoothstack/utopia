@@ -15,6 +15,7 @@ import java.util.Set;
 import com.ss.utopia.entity.Airplane;
 import com.ss.utopia.entity.AirplaneType;
 import com.ss.utopia.entity.Airport;
+import com.ss.utopia.entity.BookingAgent;
 import com.ss.utopia.entity.Flight;
 import com.ss.utopia.entity.Route;
 import com.ss.utopia.service.AdminFlight;
@@ -544,6 +545,15 @@ public class FlightMenu extends Menu {
 		int choice = readInput(1, airports.size());
 		return airports.get(choice - 1);
 	}
+	
+//	public BookingAgent pickBookingAgent() {
+//		List<BookingAgent> = 
+//		
+//	}
+//	
+//	public void printOneBookingAgent(BookingAgent ba) {
+//		
+//	}
 
 	/* Helper method to print out menu options*/
 	public void prepareString(String[] strings, Object[] obj, int index) {

@@ -9,6 +9,7 @@ import com.ss.utopia.entity.Airplane;
 import com.ss.utopia.entity.AirplaneType;
 import com.ss.utopia.entity.Airport;
 import com.ss.utopia.entity.Flight;
+import com.ss.utopia.entity.FlightBooking;
 import com.ss.utopia.entity.Route;
 import com.ss.utopia.service.AdminServices.Service;
 
@@ -190,6 +191,14 @@ public class AdminFlight {
 	public List<Route> createRouteList(){
 		AdminServices admin = new AdminServices();
 		return (List<Route>)admin.create(null, Service.ROUTE, connUtil);
+	}
+	public List<FlightBooking> createFlightBookingList(){
+		AdminServices admin = new AdminServices();
+		return (List<FlightBooking>)admin.create(null, Service.FLIGHT_BOOKING, connUtil);
+	}
+	public String updateAirplaneType(AirplaneType airplaneType) {
+		AdminServices admin = new AdminServices();
+		return admin.update(airplaneType, Service.AIRPLANETYPE, connUtil);
 	}
 	
 }

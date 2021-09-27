@@ -22,7 +22,7 @@ public class BookingAgentDAO extends BaseDAO<BookingAgent> {
 	}
 
 	public Integer addBookingAgent(BookingAgent agent) throws SQLException, ClassNotFoundException {
-
+		System.out.println(agent.getBook().getId());
 		return savePK("INSERT INTO booking_agent VALUES(?,?)", new Object[] { agent.getBook().getId(),
 				agent.getId() });
 	}

@@ -19,6 +19,7 @@ import com.ss.utopia.entity.Passenger;
  *
  */
 public class PassengerDAO extends BaseDAO<Passenger>{
+
 	public PassengerDAO(Connection conn) {
 		super(conn);
 		// TODO Auto-generated constructor stub
@@ -63,7 +64,7 @@ public class PassengerDAO extends BaseDAO<Passenger>{
 		List<Passenger> passengerList = new ArrayList<>();
 		while(rs.next()) { 
 			Passenger passenger = new Passenger(rs.getInt("id"), new Book(rs.getInt("booking_id"), null, null), rs.getString("given_name"),
-					rs.getString("family_name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"));
+					rs.getString("family_name"), rs.getDate("dob").toLocalDate(), rs.getString("gender"), rs.getString("address"));
 			passengerList.add(passenger);
 	}
 		return passengerList;

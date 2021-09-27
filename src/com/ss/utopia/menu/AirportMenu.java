@@ -135,50 +135,7 @@ public class AirportMenu extends Menu {
 
 	}
 
-	/* Reads user input using readLine() and only accepts 3 letter codes*/
-	public String readValidAirportCode() {
-		String airportCode = readLine();
-		while (true) {
-			if (airportCode == null || airportCode.length() != 3 || !airportCode.matches("[a-zA-Z]+")) {
-				System.out.println("Please enter valid code");
-				airportCode = readLine();
-				continue;
-			}
-			break;
 
-		}
-		return airportCode.toUpperCase();
-	}
-
-	/* Reads user input using readLin() and only accepts letters*/
-	public String readValidCity() {
-
-		String city = readLine();
-		/* Check for valid characters */
-		while (true) {
-			if (city == null || city.equals("") || !city.matches("[ a-zA-Z]+")) {
-				System.out.println("Please enter valid characters");
-				city = readLine();
-				continue;
-			}
-			break;
-		}
-		/* Formatting to make the city consistent */
-		city = city.trim();
-		StringBuilder sb = new StringBuilder();
-		sb.append(Character.toUpperCase(city.charAt(0)));
-		for (int i = 1; i < city.length(); i++) {
-
-			if (city.charAt(i - 1) == ' ') {
-				if (city.charAt(i) == ' ')
-					continue;
-				sb.append(Character.toUpperCase(city.charAt(i)));
-			} else {
-				sb.append(Character.toLowerCase(city.charAt(i)));
-			}
-		}
-		return sb.toString();
-	}
 
 	/* Calls read Airport in the service which will display airports. Allows user to select
 	 * airport and will return the selected airport or null if the user chooses to 'Go Back' */

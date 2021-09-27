@@ -4,6 +4,7 @@
 package com.ss.utopia.entity;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 /**
  * @author Walter Chang
@@ -14,11 +15,11 @@ public class Passenger {
 	private Book bookId;
 	private String givenName;
 	private String familyName;
-	private Date dob;
+	private LocalDate dob;
 	private String gender;
 	private String address;
 
-	public Passenger(Integer id, Book bookId, String givenName, String familyName, Date dob, String gender,
+	public Passenger(Integer id, Book bookId, String givenName, String familyName, LocalDate dob, String gender,
 			String address) {
 		super();
 		this.id = id;
@@ -66,11 +67,11 @@ public class Passenger {
 		this.familyName = familyName;
 	}
 
-	public Date getDob() {
+	public LocalDate getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(LocalDate dob) {
 		this.dob = dob;
 	}
 
