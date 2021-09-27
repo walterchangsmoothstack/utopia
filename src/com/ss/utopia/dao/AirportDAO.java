@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ss.utopia.entity.Airport;
+import com.ss.utopia.entity.Route;
 
 /**
  * @author Walter Chang
@@ -31,9 +32,14 @@ public class AirportDAO extends BaseDAO<Airport>{
 				new Object[] {airport.getAirportId(), airport.getCity()});
 	
 	}
+	
 	public void updateAirport(Airport airport) throws SQLException, ClassNotFoundException {
 		save("UPDATE airport SET city = ? WHERE iata_id = ?", 
 				new Object[] {airport.getCity(), airport.getAirportId()});
+	}
+	public void updateAirportCode(String oldCode, String newCode) throws SQLException, ClassNotFoundException {
+		save("UPDATE airport SET iata_id = ?  WHERE iata_id = ?  ", 
+				new Object[] {newCode, oldCode});
 	}
 	
 	public void deleteAirport(String airportId) throws SQLException, ClassNotFoundException {

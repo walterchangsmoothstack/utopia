@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ss.utopia.entity.Airport;
 import com.ss.utopia.entity.Route;
 
 /**
@@ -46,6 +47,10 @@ public class RouteDAO extends BaseDAO<Route> {
 	public List<Route> readRoutesByAirportId(String airportId) throws ClassNotFoundException, SQLException {
 		return read("SELECT * FROM route WHERE origin_id = ? OR destination_id = ?", 
 						new Object[] { airportId, airportId });
+	}
+	public List<Route> readRouteByAirports(Airport airport1, Airport airport2) throws ClassNotFoundException, SQLException {
+		return read("SELECT * FROM route WHERE origin_id = ? AND destination_id = ?", 
+						new Object[] { airport1.getAirportId(), airport2.getAirportId() });
 	}
 	
 	public List<Route> readRoutes() throws ClassNotFoundException, SQLException{

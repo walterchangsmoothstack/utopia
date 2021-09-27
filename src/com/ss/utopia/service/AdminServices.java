@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import com.ss.utopia.dao.AirplaneDAO;
+import com.ss.utopia.dao.AirplaneTypeDAO;
 import com.ss.utopia.dao.AirportDAO;
 import com.ss.utopia.dao.BookDAO;
 import com.ss.utopia.dao.BookingAgentDAO;
@@ -12,6 +15,7 @@ import com.ss.utopia.dao.FlightDAO;
 import com.ss.utopia.dao.PassengerDAO;
 import com.ss.utopia.dao.RouteDAO;
 import com.ss.utopia.dao.UserDAO;
+import com.ss.utopia.entity.AirplaneType;
 import com.ss.utopia.entity.Airport;
 import com.ss.utopia.entity.Book;
 import com.ss.utopia.entity.BookingAgent;
@@ -24,8 +28,10 @@ import com.ss.utopia.entity.UserRole;
 public class AdminServices<T> {
 
 	public enum Service {
-		AIRPORT, ROUTE, FLIGHT, BOOKING, PASSENGER, EMPLOYEE, USER
+		AIRPORT, ROUTE, FLIGHT, BOOKING, PASSENGER, EMPLOYEE, USER, AIRPLANE, AIRPLANETYPE
 	}
+
+	Random random = new Random();
 
 	public String add(T obj, Service serv, ConnectionUtil connUtil) {
 		Connection conn = null;
@@ -42,7 +48,18 @@ public class AdminServices<T> {
 				break;
 			case FLIGHT:
 				FlightDAO fdao = new FlightDAO(conn);
-				fdao.addFlight((Flight) obj);
+				List<Integer> keys = new ArrayList<>();
+				for (Flight f : fdao.readFlight()) {
+					keys.add(f.getId());
+				}
+				int key = 1;
+				while (keys.contains(key)) {
+					key = random.nextInt(100);
+				}
+				Flight flight = (Flight) obj;
+				flight.setId(key);
+				fdao.addFlight(flight);
+
 				break;
 			case BOOKING:
 				BookDAO bdao = new BookDAO(conn);
@@ -67,7 +84,7 @@ public class AdminServices<T> {
 			conn.commit();
 			return "Added " + serv + " successfully";
 		} catch (ClassNotFoundException | SQLException | NullPointerException e) {
-			// e.printStackTrace();
+			e.printStackTrace();
 			if (conn != null) {
 				try {
 					conn.rollback();
@@ -193,7 +210,7 @@ public class AdminServices<T> {
 			case USER:
 				UserDAO udao = new UserDAO(conn);
 				if (optional != null) {
-					for (User u : udao.readUserByRole((UserRole)optional)) {
+					for (User u : udao.readUserByRole((UserRole) optional)) {
 						information.append("Id: " + u.getId());
 						information.append("\nRole Id: " + u.getRole().getId());
 						information.append("\nFirst Name:" + u.getGivenName());
@@ -222,7 +239,7 @@ public class AdminServices<T> {
 			conn.commit();
 			return (information.length() == 0) ? "No " + serv + " found" : information.toString();
 		} catch (ClassNotFoundException | SQLException | NullPointerException e) {
-			 e.printStackTrace();
+			e.printStackTrace();
 			if (conn != null) {
 				try {
 					conn.rollback();
@@ -249,7 +266,13 @@ public class AdminServices<T> {
 			switch (serv) {
 			case AIRPORT:
 				AirportDAO adao = new AirportDAO(conn);
+				if(obj instanceof String) {
+					String s = (String)obj;
+					adao.updateAirportCode(s.substring(0, s.indexOf(".")), s.substring(s.indexOf(".")+1));
+				}
+				else {
 				adao.updateAirport((Airport) obj);
+				}
 				break;
 			case ROUTE:
 				RouteDAO rdao = new RouteDAO(conn);
@@ -348,7 +371,7 @@ public class AdminServices<T> {
 			}
 			conn.commit();
 			return "Deleted " + serv + " successfully";
-		} catch (ClassNotFoundException | SQLException | ClassCastException | NullPointerException e) {
+		} catch (ClassNotFoundException | SQLException | NullPointerException e) {
 			e.printStackTrace();
 			if (conn != null) {
 				try {
@@ -366,6 +389,47 @@ public class AdminServices<T> {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	public List<T> create(Object[] optional, Service serv, ConnectionUtil connUtil) {
+		Connection conn = null;
+		List list = new ArrayList<>();
+		try {
+			conn = connUtil.getConnection();
+			switch (serv) {
+			case AIRPORT:
+				AirportDAO adao = new AirportDAO(conn);
+				list = adao.readAirports();
+				break;
+			case AIRPLANE:
+				AirplaneDAO apdao = new AirplaneDAO(conn);
+
+				list = apdao.readAirplanesByType((AirplaneType) optional[0]);
+				break;
+			case AIRPLANETYPE:
+				AirplaneTypeDAO aptdao = new AirplaneTypeDAO(conn);
+				list = aptdao.readAirplaneType();
+				break;
+			case ROUTE:
+
+				RouteDAO rdao = new RouteDAO(conn);
+				if (optional == null) {
+					list = rdao.readRoutes();
+				} else {
+					list = rdao.readRouteByAirports((Airport) optional[0], (Airport) optional[1]);
+				}
+				break;
+			case FLIGHT:
+				FlightDAO fdao = new FlightDAO(conn);
+				list = fdao.readFlight();
+				break;
+			}
+			return list;
+		} catch (ClassNotFoundException | SQLException | NullPointerException e) {
+			e.printStackTrace();
+			System.out.println("Something went wrong");
+			return null;
 		}
 	}
 

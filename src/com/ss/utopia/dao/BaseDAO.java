@@ -59,6 +59,8 @@ public abstract class BaseDAO<T> {
 		
 	}
 	
+
+
 	 abstract protected List<T> extractData(ResultSet rs) throws SQLException, ClassNotFoundException;
 	
 }

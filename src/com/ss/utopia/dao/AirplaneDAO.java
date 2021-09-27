@@ -38,10 +38,10 @@ public class AirplaneDAO extends BaseDAO<Airplane> {
 	}
 	
 	public List<Airplane> readAirplane() throws ClassNotFoundException, SQLException {
-		return read("SELECT * FROM airplane_type", null);
+		return read("SELECT * FROM airplane", null);
 	}
-	public List<Airplane> readAirportsInCity(Integer type) throws ClassNotFoundException, SQLException {
-		return read("SELECT * FROM airplane WHERE type_id = ?", new Object[] {type});
+	public List<Airplane> readAirplanesByType(AirplaneType type) throws ClassNotFoundException, SQLException {
+		return read("SELECT * FROM airplane WHERE type_id = ?", new Object[] {type.getAirplaneTypeId()});
 	}
 	
 	protected List<Airplane> extractData(ResultSet rs) throws ClassNotFoundException, SQLException {

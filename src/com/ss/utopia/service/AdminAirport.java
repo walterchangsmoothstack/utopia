@@ -68,5 +68,11 @@ public class AdminAirport {
 		return admin.delete(new Object[] { airportId }, Service.AIRPORT, connUtil);
 
 	}
+	
+	/* Read a list of airports for creation of airport*/
+	public List<Airport> createAirportList(){
+		AdminServices admin = new AdminServices();
+		return (List<Airport>)admin.create(null, Service.AIRPORT, connUtil);
+	}
 
 }
