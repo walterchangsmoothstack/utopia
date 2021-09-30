@@ -32,7 +32,6 @@ public class CommandLineMenu extends Menu {
 	/* Start of program. Call the Menu super class' run method*/
 	public static void main(String[] args) {
 		CommandLineMenu menu = new CommandLineMenu();
-
 		menu.runProgram();
 
 	}

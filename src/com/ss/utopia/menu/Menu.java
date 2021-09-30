@@ -21,15 +21,16 @@ import com.ss.utopia.entity.User;
 import com.ss.utopia.entity.UserRole;
 import com.ss.utopia.service.AdminFlight;
 import com.ss.utopia.service.AdminPassenger;
+import com.ss.utopia.service.HandleOverbook;
 
 /**
  * @author Walter Chang
  *
  */
 public class Menu {
-
+	//OverRideTripCancellation override = new OverRideTripCancellation();
 	boolean quit;
-	private final String[] operations = new String[] { "Add", "Read", "Update", "Delete",  "Over-ride Trip Cancellation", "Quit" };
+	private final String[] operations = new String[] { "Add", "Read", "Update", "Delete",  "Other", "Quit" };
 	private final String[] categories = new String[] { "Flights", "Seats", "Tickets and Passengers", "Airports",
 			"Travelers", "Employees", "Go Back" };
 
@@ -64,24 +65,47 @@ public class Menu {
 			break;
 		case 3:
 			update(cat);
+			break;
 		case 4:
 			delete(cat);
+			break;
 		default:
 			;
 		}
-		// }
 
 	}
 
+	public void exit() {
+		return;
+	}
+	
+	public void other(){
+		System.out.println("1) Handle overbook");
+		System.out.println("2) Override Trip Cancellation");
+		System.out.println("3) Exit");
+		Integer choice = readInput(1, 3);
+		if(choice == 2) {
+			OverRideTripCancellation override = new OverRideTripCancellation();
+			override.overrideCancellation();
+			other();
+		}
+		else if(choice == 1) {
+			HandleOverbookMenu overbook = new HandleOverbookMenu();
+
+			overbook.handleOverbook();
+		}
+		else {
+			other();
+		}
+		
+	}
 	public void runProgram() {
 		// while(!quit) {
 		openingPrompt();
 		int input = readInput(1, operations.length);
 		if(input == operations.length) return;
 		if(input == 5) {
-			OverRideCancellation overide = new OverRideCancellation();
-			overide.checkForOveride();
-			runProgram();
+			other();
 			return;
 		}
 		chooseCategory(input);
@@ -91,7 +115,7 @@ public class Menu {
 	public void add(int category) {
 		switch (category) {
 		case 1:
-			FlightMenu fmenu = new FlightMenu();
+			FlightMenuOld fmenu = new FlightMenuOld();
 			fmenu.addFlight();
 			break;
 		case 3:
@@ -104,7 +128,7 @@ public class Menu {
 			break;
 		case 6:
 			EmployeeMenu emenu = new EmployeeMenu();
-			emenu.addEmployee();
+			//emenu.addEmployee();
 			break;
 		}
 
@@ -113,7 +137,7 @@ public class Menu {
 	public void update(int category) {
 		switch (category) {
 		case 1:
-			FlightMenu fmenu = new FlightMenu();
+			FlightMenuOld fmenu = new FlightMenuOld();
 			fmenu.updateFlight();
 			break;
 		case 3:
@@ -126,7 +150,7 @@ public class Menu {
 			break;
 		case 6:
 			EmployeeMenu emenu = new EmployeeMenu();
-			emenu.updateEmployee();
+			//emenu.updateEmployee();
 		}
 
 	}
@@ -134,7 +158,7 @@ public class Menu {
 	public void read(int category) {
 		switch (category) {
 		case 1:
-			FlightMenu fmenu = new FlightMenu();
+			FlightMenuOld fmenu = new FlightMenuOld();
 			fmenu.readFlight();
 			break;
 		case 3:
@@ -147,7 +171,7 @@ public class Menu {
 			break;
 		case 6:
 			EmployeeMenu emenu = new EmployeeMenu();
-			emenu.readEmployee();
+			//emenu.readEmployee();
 			break;
 		}
 	}
@@ -155,7 +179,7 @@ public class Menu {
 	public void delete(int category) {
 		switch (category) {
 		case 1:
-			FlightMenu fmenu = new FlightMenu();
+			FlightMenuOld fmenu = new FlightMenuOld();
 			fmenu.deleteFlight();
 		case 3:
 			PassengerMenu pmenu = new PassengerMenu();
@@ -165,7 +189,7 @@ public class Menu {
 			amenu.deleteAirport();
 		case 6:
 			EmployeeMenu emenu = new EmployeeMenu();
-			emenu.deleteEmployee();
+			//emenu.deleteEmployee();
 			break;
 		}
 	}
